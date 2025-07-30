@@ -1,0 +1,51 @@
+{
+  "site_title": "Schweizer Medien-Bias-Tracker",
+  "tagline": "Analyse du biais médiatique suisse • Analisi dei bias dei media svizzeri",
+  "subtitle": "KI-gestützte Analyse in allen Sprachregionen der Schweiz",
+  
+  "nav": {
+    "recent_analysis": "Aktuelle Analyse",
+    "topics": "Themen",
+    "admin_dashboard": "Admin-Dashboard",
+    "legacy_analyzer": "Legacy-Analyzer"
+  },
+  
+  "topics": {
+    "immigration_integration": "Immigration & Integration",
+    "eu_relations": "EU-Beziehungen & Bilaterale Abkommen", 
+    "climate_energy": "Klima- & Energiepolitik",
+    "swiss_politics": "Schweizer Politik & Wahlen"
+  },
+  
+  "bias_categories": {
+    "restrictive": "Restriktiv",
+    "liberal": "Liberal",
+    "pro_eu": "Pro-EU",
+    "eu_skeptical": "EU-Skeptisch",
+    "green_progressive": "Grün/Progressiv",
+    "conservative_business": "Konservativ/Wirtschaft",
+    "left_center": "Links/Mitte",
+    "right_center": "Rechts/Mitte",
+    "neutral": "Neutral"
+  },
+  
+  "common": {
+    "articles_analyzed": "Artikel analysiert",
+    "last_updated": "Zuletzt aktualisiert",
+    "confidence": "Vertrauen",
+    "source": "Quelle",
+    "published": "Veröffentlicht",
+    "read_article": "Artikel lesen",
+    "never": "Nie"
+  },
+  
+  "footer": {
+    "swiss_media_sources": "Schweizer Medienquellen",
+    "german_speaking": "Deutschsprachig",
+    "french_speaking": "Französischsprachig", 
+    "italian_speaking": "Italienischsprachig",
+    "international": "International",
+    "powered_by": "KI-gestützte Bias-Analyse mit Gemini 1.5 Flash",
+    "analyzing_regions": "Medienanalyse in allen Schweizer Sprachregionen"
+  }
+}

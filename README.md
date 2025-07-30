@@ -1,14 +1,22 @@
-# News Sentiment Analyzer
+# Swiss Media Bias Tracker
 
-A web application that allows users to analyze sentiment of news articles from multiple sources on any given topic.
+A multilingual web application that analyzes bias in Swiss news coverage across Switzerland's four official languages (German, French, Italian, and English).
 
 ## Features
 
-- **User-driven analysis**: Users select news sources, topic, and analysis type
-- **Real-time processing**: Articles are scraped and analyzed on-demand
-- **Multiple news sources**: Support for BBC, CNN, Reuters, and custom sources
-- **Sentiment analysis**: Uses OpenAI GPT to analyze article sentiment
-- **Simple dashboard**: Shows sentiment statistics and article summaries
+- **Swiss-focused analysis**: Tracks bias in Swiss news sources across linguistic regions
+- **Multilingual interface**: Full support for DE/FR/IT/EN with automatic URL routing
+- **Real-time processing**: Articles are collected and analyzed on-demand  
+- **Swiss news sources**: Tages-Anzeiger, NZZ, SRF, Le Temps, Le Matin, RTS, Corriere del Ticino, RSI, SWI swissinfo.ch
+- **AI-powered bias analysis**: Uses Google Gemini to analyze bias with Swiss political context
+- **Modern responsive UI**: Clean design with language switching and article cards
+
+## Swiss Topics Analyzed
+
+1. **Immigration & Integration** - Analysis of restrictive vs liberal perspectives
+2. **EU Relations & Bilateral Agreements** - Pro-EU vs EU-skeptical coverage  
+3. **Climate & Energy Policy** - Green/progressive vs conservative/business framing
+4. **Swiss Politics & Elections** - Left-center vs right-center political coverage
 
 ## Setup
 
@@ -17,94 +25,107 @@ A web application that allows users to analyze sentiment of news articles from m
    pip install -r requirements.txt
    ```
 
-2. **Set up PostgreSQL database**:
-   ```bash
-   createdb news_agg
-   ```
-
-3. **Configure environment variables**:
+2. **Configure environment variables**:
    ```bash
    cp .env.example .env
-   # Edit .env with your database URL and OpenAI API key
+   # Add your Google API key for Gemini
+   GOOGLE_API_KEY=your_gemini_api_key_here
    ```
 
-4. **Run the application**:
+3. **Run the application**:
    ```bash
-   cd app
-   python -m uvicorn main:app --reload
+   python -m uvicorn app.main:app --reload
    ```
 
-5. **Access the application**:
-   Open http://localhost:8000 in your browser
+4. **Access the application**:
+   - English: http://localhost:8000/en/
+   - German: http://localhost:8000/de/  
+   - French: http://localhost:8000/fr/
+   - Italian: http://localhost:8000/it/
 
 ## Usage
 
-1. Select one or more news sources
-2. Enter a topic to analyze (e.g., "climate change", "Israel")
-3. Click "Analyze" and wait for processing to complete
-4. View sentiment statistics and individual article analyses
+1. **Browse recent analysis**: View latest analyzed articles on the homepage
+2. **Language switching**: Use the top-right language switcher to change interface language
+3. **Topic exploration**: Click on topic cards to view detailed analysis by category
+4. **Manual analysis**: Use `/admin` endpoint to trigger analysis for specific topics and date ranges
+5. **View results**: Articles are categorized by bias direction with confidence scores and reasoning
 
 ## Architecture
 
-- **Backend**: FastAPI with SQLAlchemy ORM
-- **Database**: PostgreSQL
-- **Scraping**: newspaper3k with custom scrapers for major news sites
-- **AI**: OpenAI GPT-3.5-turbo for sentiment analysis
-- **Frontend**: Simple HTML/CSS/JavaScript
+- **Backend**: FastAPI with SQLAlchemy ORM and SQLite database
+- **Translation**: JSON-based translation system with memory caching
+- **News Collection**: RSS feeds and web scraping from 9 Swiss sources
+- **AI Analysis**: Google Gemini 1.5 Flash for multilingual bias analysis
+- **Frontend**: Responsive HTML/CSS with Swiss-themed design
+- **Language Detection**: Automatic source language detection for article tagging
 
 ## API Endpoints
 
-- `GET /` - Main application interface
-- `POST /api/analyze` - Start new analysis
-- `GET /api/results/{request_id}` - Get analysis results
+- `GET /{lang}/` - Multilingual homepage (lang: en/de/fr/it)
+- `GET /api/topics` - Get all topics with statistics
+- `GET /api/topic/{topic_id}` - Get articles for specific topic
+- `POST /admin/trigger-analysis` - Manually trigger bias analysis
+- `GET /{lang}/admin` - Admin dashboard for manual testing
 
-## Bias Research Framework
+## Swiss News Sources
 
-### Overview
-This project is evolving from simple sentiment analysis to sophisticated bias research using comparative analysis and Chain of Thought (CoT) reasoning.
+**German-speaking Switzerland:**
+- Tages-Anzeiger (Zurich, center-left)
+- Neue Zürcher Zeitung (NZZ, center-right)
+- Schweizer Radio und Fernsehen (SRF, public media)
 
-### Research Goals
-Instead of binary "biased/unbiased" classification, we aim to:
+**French-speaking Switzerland (Romandy):**
+- Le Matin (popular daily)
+- Le Temps (quality daily)
+- Radio Télévision Suisse (RTS, public media)
 
-1. **Rank articles relatively** on contentious topics (e.g., Israel/Palestine, climate change, immigration)
-2. **Identify bias direction** - which side of an issue the bias favors
-3. **Provide reasoning** - why the LLM classified bias in a particular direction
-4. **Create bias spectrums** - position articles from "Strongly Pro-Side A" to "Neutral" to "Strongly Pro-Side B"
+**Italian-speaking Switzerland (Ticino):**
+- Corriere del Ticino (regional daily)
+- Radiotelevisione Svizzera (RSI, public media)
 
-### Example Research Topics
-- **Israel/Palestine Conflict**: Compare how different sources frame the same events
-- **Climate Change**: Analyze scientific vs skeptical framing of environmental data
-- **Economic Policy**: Compare progressive vs conservative framing of economic policies
-- **Healthcare**: Analyze public vs private healthcare system coverage
+**International/English:**
+- SWI swissinfo.ch (Swiss international service)
 
-### Key Research Questions
-1. Can LLMs consistently identify which direction bias leans when comparing articles?
-2. What specific language patterns and framing techniques indicate bias direction?
-3. How do different news sources systematically bias coverage of the same events?
-4. Can we establish reliable "neutral baselines" for controversial topics?
+## Bias Analysis Framework
 
-### Chain of Thought Approach
-Rather than simple classification, the system will:
-1. **Extract factual claims** from articles using LLM parsing
-2. **Verify facts** against authoritative sources (Wikipedia, government data)
-3. **Identify main claims** and distinguish facts from interpretation
-4. **Analyze language choices** and emotional framing
-5. **Compare source selection** and quote attribution
-6. **Explain reasoning** with specific text evidence and fact-check results
-7. **Rank relatively** against other articles, weighted by factual accuracy
+### Approach
+Rather than simple "biased/unbiased" classification, the system:
 
-### Fact-Checking Integration
-A key innovation is layering factual verification onto bias analysis:
+1. **Context-aware analysis**: Considers Swiss political landscape (SVP, SP, FDP parties)
+2. **Topic-specific categories**: Each topic has relevant bias dimensions
+3. **Multilingual understanding**: Analyzes articles in their original language
+4. **Evidence-based reasoning**: Provides specific examples of bias indicators
+5. **Confidence scoring**: Rates analysis confidence based on evidence strength
 
-**Fact Extraction**: LLMs identify verifiable claims (statistics, dates, events, quotes)
-**Source Verification**: Cross-reference against Wikipedia API, government databases, academic sources
-**Accuracy Scoring**: Rate articles on factual reliability alongside bias assessment
-**Context Analysis**: Identify when facts are accurate but presented without necessary context
-**Error-Bias Correlation**: Research how factual inaccuracies correlate with bias direction
+### Bias Categories by Topic
 
-**Example Research Questions:**
-- Do pro-Israeli articles contain more factual errors than pro-Palestinian ones?
-- How do climate change articles selectively present accurate but misleading statistics?
-- Which types of factual claims are most susceptible to biased framing?
+**Immigration & Integration:**
+- Restrictive (emphasizes concerns, limits)
+- Liberal (emphasizes benefits, openness)  
+- Neutral (balanced presentation)
 
-This approach transforms bias detection from a classification task into a comprehensive research tool for understanding how media shapes public discourse through both interpretive bias and factual manipulation.
+**EU Relations:**
+- Pro-EU (favors closer ties)
+- EU-skeptical (favors independence)
+- Neutral (balanced analysis)
+
+**Climate & Energy:**
+- Green/Progressive (pro-climate action)
+- Conservative/Business (economic concerns)
+- Neutral (balanced coverage)
+
+**Swiss Politics:**
+- Left-center (SP, Green perspectives)
+- Right-center (SVP, FDP perspectives)
+- Neutral (balanced political coverage)
+
+### Analysis Factors
+
+1. **Source Selection**: Who is quoted and given voice
+2. **Language Choices**: Loaded terms vs neutral language
+3. **Context Provision**: What background information is included/omitted
+4. **Framing**: How issues are presented and prioritized
+5. **Swiss Context**: Understanding of Swiss political and cultural nuances
+
+This system provides researchers and citizens with tools to understand how Swiss media across different linguistic regions covers important political topics, revealing potential bias patterns in Switzerland's diverse media landscape.
